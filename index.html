@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko" style="height:100%">
+  <head>
+    <title>Attestation Covid Flash v1.0</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+  </head>
+  <body style="height:100%;">
+    <div style="position: relative; height: 100%">
+      <h1 style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 29rem;">Attestation Covid Flash v1.0</h1>
+      <div id="qrcode" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 500px; height: 500px;"></div>
+    </div>
+
+    <script type="text/javascript">
+      function getParams(url) {
+        var params = {};
+        var parser = document.createElement('a');
+        parser.href = url;
+        var query = parser.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split('=');
+          params[pair[0]] = decodeURIComponent(pair[1]);
+        }
+        return params;
+      };
+
+      function rjust( string, width, padding ) {
+        string = string.toString();
+        padding = padding || " ";
+        padding = padding.substr( 0, 1 );
+        if ( string.length < width )
+          return padding.repeat( width - string.length ) + string;
+        else
+          return string;
+      }
+
+      let params = getParams(window.location.href);
+
+      let dateNow      = new Date();
+      let dateCreation = new Date(dateNow - (1000 * 60 * 35));
+      let dateSortie   = new Date(dateNow - (1000 * 60 * 20));
+
+      let creationDate  = `${rjust(dateCreation.getDate(), 2, '0')}/${rjust(dateCreation.getMonth()+1, 2, '0')}/${dateCreation.getFullYear()}`;
+      let creationHour  = `${rjust(dateCreation.getHours(), 2, '0')}h${rjust(dateCreation.getMinutes(), 2, '0')}`;
+      let datesortie    = `${rjust(dateSortie.getDate(), 2, '0')}/${rjust(dateSortie.getMonth()+1, 2, '0')}/${dateSortie.getFullYear()}`;
+      let heuresortie   = `${rjust(dateSortie.getHours(), 2, '0')}:${rjust(dateSortie.getMinutes(), 2, '0')}`;
+
+      let reason        = 'travail';
+
+      let lastname      = params.lastname  || 'Dupont';
+      let firstname     = params.firstname || 'Jean';
+      let birthday      = params.birthday  || '01/01/1956';
+      let lieunaissance = params.birthtown || 'Paris';
+      let address       = params.address   || '1 rue de la Paix';
+      let zipcode       = params.zipcode   || '75001';
+      let town          = params.town      || 'Paris';
+
+      const data = [
+        `Cree le: ${creationDate} a ${creationHour}`,
+        `Nom: ${lastname}`,
+        `Prenom: ${firstname}`,
+        `Naissance: ${birthday} a ${lieunaissance}`,
+        `Adresse: ${address} ${zipcode} ${town}`,
+        `Sortie: ${datesortie} a ${heuresortie}`,
+        `Motifs: ${reason}`,
+      ].join(';\n ');
+
+      console.log('QR Code Data:');
+      console.log(data);
+
+      let qrcode = new QRCode(document.getElementById("qrcode"), {width: 500, height: 500});
+      qrcode.makeCode(data);
+    </script>
+  </body>
+</html>
