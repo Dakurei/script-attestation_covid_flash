@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko" style="height:100%">
   <head>
-    <title>Attestation Covid Flash v1.0</title>
+    <title>Attestation Covid Flash v1.1</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
     <meta charset="UTF-8">
 
-    <meta property="og:title" content="Attestation Covid Flash v1.0" />
+    <meta property="og:title" content="Attestation Covid Flash v1.1" />
     <meta property="og:description" content="Générez automatiquement une attestation numérique via une simple url enregistrée dans vos favoris !" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dakurei.github.io/script-attestation_covid_flash/" />
     <meta property="og:image" content="https://dakurei.github.io/script-attestation_covid_flash/AttestationCovidFlash.jpg" />
-    <meta property="og:site_name" content="Attestation Covid Flash v1.0" />
+    <meta property="og:site_name" content="Attestation Covid Flash v1.1" />
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
 
@@ -21,7 +21,7 @@
   </head>
   <body style="height:100%;">
     <div class="container align-middle text-center">
-      <h1>Attestation Covid Flash v1.0</h1>
+      <h1>Attestation Covid Flash v1.1</h1>
       <hr>
       <div id="qrcode" class="d-flex justify-content-center" style="margin: 150px auto;"></div>
       <hr>
@@ -64,8 +64,6 @@
       let datesortie    = `${rjust(dateSortie.getDate(), 2, '0')}/${rjust(dateSortie.getMonth()+1, 2, '0')}/${dateSortie.getFullYear()}`;
       let heuresortie   = `${rjust(dateSortie.getHours(), 2, '0')}:${rjust(dateSortie.getMinutes(), 2, '0')}`;
 
-      let reason        = 'travail';
-
       let lastname      = params.lastname  || 'Dupont';
       let firstname     = params.firstname || 'Jean';
       let birthday      = params.birthday  || '01/01/1956';
@@ -73,6 +71,41 @@
       let address       = params.address   || '1 rue de la Paix';
       let zipcode       = params.zipcode   || '75001';
       let town          = params.town      || 'Paris';
+      let reason        = params.reason    || '1';
+
+
+      let formatReason = 'travail';
+      switch (reason) {
+        case '1':
+          formatReason = 'travail';
+          break;
+        case '2':
+          formatReason = 'achats';
+          break;
+        case '3':
+          formatReason = 'sante';
+          break;
+        case '4':
+          formatReason = 'famille';
+          break;
+        case '5':
+          formatReason = 'handicap';
+          break;
+        case '6':
+          formatReason = 'sport_animaux';
+          break;
+        case '7':
+          formatReason = 'convocation';
+          break;
+        case '8':
+          formatReason = 'missions';
+          break;
+        case '9':
+          formatReason = 'enfants';
+          break;
+        default:
+          formatReason = 'travail';
+      }
 
       const data = [
         `Cree le: ${creationDate} a ${creationHour}`,
@@ -81,7 +114,7 @@
         `Naissance: ${birthday} a ${lieunaissance}`,
         `Adresse: ${address} ${zipcode} ${town}`,
         `Sortie: ${datesortie} a ${heuresortie}`,
-        `Motifs: ${reason}`,
+        `Motifs: ${formatReason}`,
       ].join(';\n ');
 
       console.log('QR Code Data:');
